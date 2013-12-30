@@ -1,0 +1,10 @@
+Package: com.caughtinflux.photostoall
+Name: PhotosToAll
+Depends: mobilesubstrate
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: flux
+Author: flux
+Section: Tweaks
+Version: 0.0.1-15
+Installed-Size: 16
