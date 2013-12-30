@@ -37,6 +37,8 @@ static NSIndexSet *insertionIndices = nil;
     [insertionIndices release];
     itemsToAdd = nil;
     insertionIndices = nil;
+
+    %orig();
 }
 
 %new
