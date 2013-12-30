@@ -1,5 +1,5 @@
 Package: com.caughtinflux.phototoapp
-Name: Open In For Photos
+Name: Open In App For Photos
 Depends: mobilesubstrate
 Architecture: iphoneos-arm
 Description: Send photos and videos to other apps directly from the Photos/Camera app.
