@@ -1,10 +1,10 @@
-Package: com.caughtinflux.photostoall
-Name: PhotosToAll
+Package: com.caughtinflux.phototoapp
+Name: Open In For Photos
 Depends: mobilesubstrate
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Send photos and videos to other apps directly from the Photos/Camera app.
 Maintainer: flux
 Author: flux
 Section: Tweaks
-Version: 0.0.1-15
+Version: 1.0-1
 Installed-Size: 16
