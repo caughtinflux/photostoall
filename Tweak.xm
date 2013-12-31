@@ -8,6 +8,10 @@
 static NSArray *itemsToAdd = nil;
 static NSIndexSet *insertionIndices = nil;
 
+// This needs to be a static variable, since otherwise the controller deallocates in the middle of an activity
+// (It is like the UIActivity classes)
+static UIDocumentInteractionController *controller = nil;
+
 - (NSArray *)_standardToolbarItemsForCurrentAsset
 {
     // This method is called every time the asset changes,
@@ -24,6 +28,7 @@ static NSIndexSet *insertionIndices = nil;
         UIBarButtonItem *flex = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
         itemsToAdd = [@[flex, button] retain];
         insertionIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(1, 2)];
+        controller = [[UIDocumentInteractionController interactionControllerWithURL:self.currentAsset.mainFileURL] retain];
     }   
     NSMutableArray *moddedItems = [ret mutableCopy];
     [moddedItems insertObjects:itemsToAdd atIndexes:insertionIndices];
@@ -35,8 +40,10 @@ static NSIndexSet *insertionIndices = nil;
 {
     [itemsToAdd release];
     [insertionIndices release];
+    [controller release];
     itemsToAdd = nil;
     insertionIndices = nil;
+    controller = nil;
 
     %orig();
 }
@@ -44,7 +51,7 @@ static NSIndexSet *insertionIndices = nil;
 %new
 - (void)pta_openDocumentController:(UIBarButtonItem *)sender
 {
-    UIDocumentInteractionController *controller = [UIDocumentInteractionController interactionControllerWithURL:self.currentAsset.mainFileURL];
+    controller.URL = self.currentAsset.mainFileURL;
     [controller presentOpenInMenuFromBarButtonItem:sender animated:YES];
 }
 
