@@ -5,12 +5,10 @@
 
 %hook PUPhotoBrowserController
 
-static NSArray *itemsToAdd = nil;
-static NSIndexSet *insertionIndices = nil;
+static NSArray *_itemsToAdd = nil;
+static NSIndexSet *_insertionIndices = nil;
 
-// This needs to be a static variable, since otherwise the controller deallocates in the middle of an activity
-// (It is like the UIActivity classes)
-static UIDocumentInteractionController *controller = nil;
+static UIDocumentInteractionController *_controller = nil;
 
 - (NSArray *)_standardToolbarItemsForCurrentAsset
 {
@@ -21,29 +19,36 @@ static UIDocumentInteractionController *controller = nil;
     if (!ret) {
         return nil;
     }
-    if (!itemsToAdd) {
+    if (!_itemsToAdd) {
         UIBarButtonItem *button = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize
                                                                                  target:self
                                                                                  action:@selector(pta_openDocumentController:)] autorelease];
         UIBarButtonItem *flex = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
-        itemsToAdd = [@[flex, button] retain];
-        insertionIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(1, 2)];
-        controller = [[UIDocumentInteractionController interactionControllerWithURL:self.currentAsset.mainFileURL] retain];
+        _itemsToAdd = [@[flex, button] retain];
+        _insertionIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(1, 2)];
+        _controller = [[UIDocumentInteractionController interactionControllerWithURL:self.currentAsset.mainFileURL] retain];
     }   
-    NSMutableArray *moddedItems = [ret mutableCopy];
-    [moddedItems insertObjects:itemsToAdd atIndexes:insertionIndices];
+
+    NSMutableArray *moddedItems = [[ret mutableCopy] autorelease];
+    if (moddedItems.count == 5) {
+        // HAXX!
+        [moddedItems insertObject:_itemsToAdd[1] atIndex:0];
+    }
+    else {
+        [moddedItems insertObjects:_itemsToAdd atIndexes:_insertionIndices];
+    }
     
-    return [moddedItems autorelease];
+    return moddedItems;
 }
 
 - (void)dealloc
 {
-    [itemsToAdd release];
-    [insertionIndices release];
-    [controller release];
-    itemsToAdd = nil;
-    insertionIndices = nil;
-    controller = nil;
+    [_itemsToAdd release];
+    [_insertionIndices release];
+    [_controller release];
+    _itemsToAdd = nil;
+    _insertionIndices = nil;
+    _controller = nil;
 
     %orig();
 }
@@ -51,8 +56,9 @@ static UIDocumentInteractionController *controller = nil;
 %new
 - (void)pta_openDocumentController:(UIBarButtonItem *)sender
 {
-    controller.URL = self.currentAsset.mainFileURL;
-    [controller presentOpenInMenuFromBarButtonItem:sender animated:YES];
+    _controller.URL = self.currentAsset.mainFileURL;
+    [_controller presentOpenInMenuFromBarButtonItem:sender animated:YES];
 }
 
 %end
+
