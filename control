@@ -1,9 +1,9 @@
 Package: com.caughtinflux.phototoapp
 Name: Open In App For Photos
 Depends: mobilesubstrate, firmware (>= 7.0)
-Version: 1.1
+Version: 1.2
 Architecture: iphoneos-arm
-Description: Send photos and videos to other apps directly from the Photos app.
+Description: Send photos and videos to other apps directly from the Photos or Camera app.
 Maintainer: flux
 Author: flux
 Section: Tweaks
